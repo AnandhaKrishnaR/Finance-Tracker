@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - BudgetAI</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- STYLES FOR MONTH NAVIGATION -->
+    <style>
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* 8px */
+            margin-left: 1rem; /* Add some space */
+        }
+        .month-nav a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem; /* 8px */
+            border-radius: 9999px; /* circle */
+            background-color: #f3f4f6; /* gray-100 */
+            transition: background-color 0.2s;
+            border: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .month-nav a:hover {
+            background-color: #e5e7eb; /* gray-200 */
+        }
+        .month-nav a.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #f3f4f6;
+        }
+        .month-nav svg {
+            width: 1.25rem; /* 20px */
+            height: 1.25rem; /* 20px */
+            color: #4b5563; /* gray-600 */
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments/sidebar :: appSidebar}"></div>
+    <main class="content">
+        <div th:replace="~{fragments/header :: appHeader}"></div>
+
+        <div class="dashboard">
+            <div class="overview-card">
+                <div class="overview-header">
+                    <div>
+                        <h2>Monthly Overview</h2>
+                        <p>Your spending and budget for <span th:text="${monthTitle}">April 2025</span></p>
+                    </div>
+
+                    <!-- MONTHLY NAVIGATION -->
+                    <div class="month-nav">
+                        <a th:href="@{/dashboard(month=${previousMonth})}" title="Previous Month">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                        </a>
+                        <a th:href="@{/dashboard(month=${nextMonth})}"
+                           th:classappend="${isCurrentOrFutureMonth} ? 'disabled' : ''"
+                           title="Next Month">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="overview-stats">
+                    <div class="stat">
+                        <div class="amount">
+                            <span>₹</span>
+                            <span th:text="${#numbers.formatDecimal(spent, 0, 2, 'POINT')}">0.00</span>
+                        </div>
+                        <div class="label">spent</div>
+                    </div>
+                    <div class="stat">
+                        <div class="amount">
+                            <span>₹</span>
+                            <span th:text="${#numbers.formatDecimal(budget, 0, 2, 'POINT')}">0.00</span>
+                        </div>
+                        <div class="label">budget</div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <!-- FIX: Replaced > with gt (greater than) to prevent parsing error -->
+                    <div class="progress-bar" th:style="${budget gt 0 and spent gt 0} ? 'width:' + (${spent} / ${budget} * 100) + '%' : 'width:0%'"></div>
+                </div>
+                <div class="remaining">
+                    <span th:text="${#numbers.formatDecimal(remainingPct, 0, 0)} + '%'">38%</span> of your budget remaining
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="spendChart" height="120"></canvas>
+                </div>
+            </div>
+
+            <aside class="recent-card">
+                <div class="recent-header">
+                    <h3>Recent Transactions</h3>
+                    <a th:href="@{/transactions}">View all</a>
+                </div>
+                <ul class="tx-list">
+                    <li th:each="t : ${recentTransactions}">
+                        <div class="tx-left">
+                            <div class="tx-title" th:text="${t.category.name}">Grocery Store</div>
+                            <div class="tx-date" th:text="${#temporals.format(t.date, 'dd MMM yyyy')}">01 Oct 2025</div>
+                        </div>
+                        <div class="tx-amount">
+                            <span>₹</span>
+                            <span th:text="${#numbers.formatDecimal(t.amount, 0, 2, 'POINT')}">0.00</span>
+                        </div>
+                    </li>
+                </ul>
+                <button class="btn btn-light full" onclick="openModal()">+ Add Transaction</button>
+            </aside>
+        </div>
+    </main>
+</div>
+
+<!-- Add Transaction Modal (No changes needed) -->
+<div id="transactionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Transaction</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <form th:action="@{/transactions/add}" method="post" class="modal-form">
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="categoryId">Category</label>
+                <select id="categoryId" name="categoryId" required>
+                    <option value="">Select a category</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}">Category</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" placeholder="Optional description">
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Transaction</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    // No changes needed in the script
+    const labels = /*[[${chartLabels}]]*/ [];
+    const dataVals = /*[[${chartValues}]]*/ [];
+    const ctx = document.getElementById('spendChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Spending by Category',
+                    data: dataVals,
+                    backgroundColor: ['#22c55e','#f59e0b','#3b82f6','#ef4444','#a855f7','#14b8a6'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#eef2f7' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    function openModal() { document.getElementById('transactionModal').style.display = 'block'; }
+    function closeModal() { document.getElementById('transactionModal').style.display = 'none'; }
+    window.onclick = function(event) {
+        const modal = document.getElementById('transactionModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+/*]]>*/
+</script>
+</body>
+</html>
+
+

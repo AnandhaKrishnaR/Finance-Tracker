@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights - BudgetAI</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments/sidebar :: appSidebar}"></div>
+    <main class="content">
+        <div th:replace="~{fragments/header :: appHeader}"></div>
+        
+        <div class="page-content">
+            <div class="page-header">
+                <h1>Insights</h1>
+                <p>Advanced analytics and spending insights</p>
+            </div>
+            
+            <div class="insights-container">
+                <!-- Coming Soon Card -->
+                <div class="coming-soon-card">
+                    <div class="coming-soon-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </div>
+                    <h2>Advanced Insights Coming Soon!</h2>
+                    <p>We're working on powerful analytics features to help you understand your spending patterns better.</p>
+                    
+                    <div class="features-preview">
+                        <div class="feature-item">
+                            <div class="feature-icon">📊</div>
+                            <div class="feature-content">
+                                <h4>Spending Trends</h4>
+                                <p>Visualize your spending patterns over time with interactive charts</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-content">
+                                <h4>Smart Recommendations</h4>
+                                <p>Get personalized tips to optimize your budget and savings</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">📈</div>
+                            <div class="feature-content">
+                                <h4>Financial Forecasting</h4>
+                                <p>Predict future spending and plan your finances accordingly</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🔍</div>
+                            <div class="feature-content">
+                                <h4>Category Analysis</h4>
+                                <p>Deep dive into your spending by category with detailed breakdowns</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <p class="cta-text">Want to be notified when these features are ready?</p>
+                        <button class="btn btn-primary" onclick="alert('Thank you for your interest! We\'ll notify you when advanced insights are available.')">
+                            Notify Me
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Current Features -->
+                <div class="current-features">
+                    <h3>Available Now</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon-small">📊</div>
+                            <h4>Monthly Overview</h4>
+                            <p>Track your spending against your budget with visual progress bars</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon-small">📝</div>
+                            <h4>Transaction History</h4>
+                            <p>View and manage all your transactions in one place</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon-small">💰</div>
+                            <h4>Budget Management</h4>
+                            <p>Set and adjust your monthly budgets easily</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon-small">📱</div>
+                            <h4>Real-time Updates</h4>
+                            <p>See your spending data update instantly as you add transactions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+.page-content {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+}
+
+.page-header p {
+    color: #64748b;
+    margin: 0;
+}
+
+.insights-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.coming-soon-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 48px 32px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.coming-soon-icon {
+    margin-bottom: 24px;
+    opacity: 0.9;
+}
+
+.coming-soon-card h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+}
+
+.coming-soon-card p {
+    font-size: 18px;
+    opacity: 0.9;
+    margin: 0 0 32px 0;
+}
+
+.features-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+}
+
+.feature-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.feature-content h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.feature-content p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.cta-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 24px;
+}
+
+.cta-text {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+}
+
+.current-features {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.current-features h3 {
+    margin: 0 0 20px 0;
+    color: #1e293b;
+    font-size: 20px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    background: #fafbfc;
+}
+
+.feature-icon-small {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.feature-card h4 {
+    margin: 0 0 8px 0;
+    color: #1e293b;
+    font-size: 16px;
+}
+
+.feature-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .coming-soon-card {
+        padding: 32px 20px;
+    }
+    
+    .features-preview {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</body>
+</html>
+
+
+
+
+
+
+
+

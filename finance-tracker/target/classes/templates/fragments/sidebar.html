@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="appSidebar" class="sidebar">
+    <div class="sidebar-brand">Trackify</div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/dashboard}" class="active">Dashboard</a>
+        <a th:href="@{/transactions}">Transactions</a>
+        <a th:href="@{/budgets}">Budgets</a>
+        <a th:href="@{/insights}">Insights</a>
+        <a th:href="@{/profile}">Profile</a>
+        <a th:href="@{/settings}">Settings</a>
+        <a th:href="@{/logout}">Logout</a>
+        
+    </nav>
+    
+    <div class="ai-assistant">
+        <div class="title">AI Assistant</div>
+        <p>Would you like me to analyze your recent spending?</p>
+    </div>
+</aside>
+</body>
+</html>
+
+

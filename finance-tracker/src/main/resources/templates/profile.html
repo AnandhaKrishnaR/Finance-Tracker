@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - BudgetAI</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments/sidebar :: appSidebar}"></div>
+    <main class="content">
+        <div th:replace="~{fragments/header :: appHeader}"></div>
+        
+        <div class="page-content">
+            <div class="page-header">
+                <h1>Profile</h1>
+                <p>Manage your personal information</p>
+            </div>
+            
+            <div class="profile-container">
+                <!-- Profile Information Card -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="avatar">
+                            <span th:text="${user.name.charAt(0)}">U</span>
+                        </div>
+                        <div class="profile-info">
+                            <h2 th:text="${user.name}">User Name</h2>
+                            <p th:text="${user.email}">user@example.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">Member Since</div>
+                            <div class="stat-label">October 2025</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Account Type</div>
+                            <div class="stat-label">Free</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Edit Profile Form -->
+                <div class="form-card">
+                    <h3>Edit Profile Information</h3>
+                    <form th:action="@{/profile}" method="post" class="profile-form">
+                        <div th:if="${param.success}" class="alert alert-success">
+                            Profile updated successfully!
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" th:value="${user.name}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" th:value="${user.email}" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+.page-content {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+}
+
+.page-header p {
+    color: #64748b;
+    margin: 0;
+}
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.profile-card, .form-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin-right: 16px;
+}
+
+.profile-info h2 {
+    margin: 0 0 4px 0;
+    color: #1e293b;
+    font-size: 20px;
+}
+
+.profile-info p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.form-card h3 {
+    margin: 0 0 20px 0;
+    color: #1e293b;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    color: #10b981;
+    border: 1px solid #bbf7d0;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</body>
+</html>
+
+
+
+
+
+
+
+

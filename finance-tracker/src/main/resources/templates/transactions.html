@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Transactions - BudgetAI</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments/sidebar :: appSidebar}"></div>
+    <main class="content">
+        <div th:replace="~{fragments/header :: appHeader}"></div>
+        <div style="padding:20px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <h2>All Transactions</h2>
+                <button class="btn btn-primary" onclick="openModal()">+ Add Transaction</button>
+            </div>
+            <ul class="tx-list">
+                <li th:each="t : ${transactions}">
+                    <div class="tx-left">
+                        <div class="tx-title" th:text="${t.category.name}">Category</div>
+                        <div class="tx-description" th:text="${t.description}">Optional description.</div>
+                        <div class="tx-date" th:text="${t.date}">2025-10-01</div>
+                    </div>
+                    <div class="tx-actions" style="display:flex;align-items:center;gap:8px;">
+                        <div class="tx-amount">
+                            <span>₹</span>
+                            <span th:text="${#numbers.formatDecimal(t.amount, 0, 2, 'POINT')}">0.00</span>
+                        </div>
+                        <form th:action="@{/transactions/delete/{id}(id=${t.id})}" method="post" onsubmit="return confirm('Delete this transaction?');" style="margin:0">
+                            <input type="hidden" name="_csrf" th:if="${_csrf != null}" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-light btn-sm" style="color:#ef4444;">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </main>
+</div>
+
+<!-- Add Transaction Modal -->
+<div id="transactionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Transaction</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <form th:action="@{/transactions/add}" method="post" class="modal-form">
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="categoryId">Category</label>
+                <select id="categoryId" name="categoryId" required>
+                    <option value="">Select a category</option>
+                    <option th:each="category : ${categories}" 
+                            th:value="${category.id}" 
+                            th:text="${category.name}">Category</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" placeholder="Optional description">
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}" required>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+                <input type="hidden" name="_csrf" th:if="${_csrf != null}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-primary">Add Transaction</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal() {
+    document.getElementById('transactionModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('transactionModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('transactionModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+</script>
+</body>
+</html>
+
+
